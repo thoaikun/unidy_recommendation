@@ -10,6 +10,8 @@ recommend_routes = Blueprint('user_routes', __name__)
 
 @recommend_routes.route('/recommend-campaign', methods=['POST'])
 def index():
+    print( os.path.dirname(__file__))
+
     data = request.get_json()
     print(data)
     genome_tag = pd.read_csv('../../data/campaign_type.csv')
