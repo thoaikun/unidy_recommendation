@@ -5,6 +5,7 @@ import os
 import pandas as pd
 import numpy as np
 from sklearn.neighbors import NearestNeighbors
+from pathlib import Path
 
 
 recommend_routes = Blueprint('user_routes', __name__)
@@ -15,16 +16,19 @@ def index():
 
     data = request.get_json()
     print(data)
-    genome_tag = pd.read_csv('/home/ubuntu/unidy_recommendation/model/data/campaign_type.csv')
-    campaign = pd.read_csv('/home/ubuntu/unidy_recommendation/model/data/campaign.csv')
+    current_directory = Path(__file__).resolve().parent
+    data_folder = current_directory.parent / 'data'
+    genome_tag = pd.read_csv(data_folder / 'campaign_type.csv')
+    campaign = pd.read_csv(data_folder / 'campaign.csv')
     matrix_score = np.array(genome_tag)
+    
     # print(matrix_score)
-    model = joblib.load('/home/ubuntu/unidy_recommendation/model/knnModel.joblib')
+
+    # model_folder = current_directory.parent / 'model'
+    model = joblib.load(data_folder/'model/knnModel.joblib')
 
     vector = data
-
-    # vector = matrix_score[index]
-    # print(vector)
+    print(vector)
     distances, indices = model.kneighbors(vector)
     index_activity = [int(item) +1 for sublist in indices for item in sublist]
     listIds = genome_tag.iloc[index_activity]['campaign_id']
