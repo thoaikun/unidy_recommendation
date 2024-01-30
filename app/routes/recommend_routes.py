@@ -30,9 +30,9 @@ def index():
     vector = data
     print(vector)
     distances, indices = model.kneighbors(vector)
-    index_activity = [int(item) +1 for sublist in indices for item in sublist]
+    index_activity = [int(item) for sublist in indices for item in sublist]
     listIds = genome_tag.iloc[index_activity]['campaign_id']
     campaign_ids_list = campaign[campaign['campaign_id'].isin(listIds)]['campaign_id'].tolist() 
 
-    return json.dumps(index_activity)
+    return json.dumps(campaign_ids_list)
 
