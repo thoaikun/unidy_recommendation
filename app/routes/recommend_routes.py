@@ -12,11 +12,11 @@ recommend_routes = Blueprint('user_routes', __name__)
 def index():
     data = request.get_json()
     print(data)
-    genome_tag = pd.read_csv('/Users/truonghuythai/Documents/unidy_project/unidy_recommendation/model/data/campaign_type.csv')
-    campaign = pd.read_csv('/Users/truonghuythai/Documents/unidy_project/unidy_recommendation/model/data/campaign.csv')
+    genome_tag = pd.read_csv('~/unidy_recommendation/model/data/campaign_type.csv')
+    campaign = pd.read_csv('~/unidy_recommendation/model/data/campaign.csv')
     matrix_score = np.array(genome_tag)
     # print(matrix_score)
-    model = joblib.load('/Users/truonghuythai/Documents/unidy_project/unidy_recommendation/model/knnModel.joblib')
+    model = joblib.load('~/unidy_recommendation/model/knnModel.joblib')
 
     vector = data
 
