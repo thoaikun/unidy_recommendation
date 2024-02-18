@@ -1,0 +1,18 @@
+# This is an example Starter pipeline configuration
+# Use a skeleton to build, test and deploy using manual and parallel steps
+# -----
+# You can specify a custom docker image from Docker Hub as your build environment.
+
+image: atlassian/default-image:3
+
+pipelines:
+  default:
+    - step:
+        script:
+          - echo "Deploy recommendation service..."
+  branches:
+    master:
+      - step:
+          name: Running build script
+          script:
+            - scp -i ./unidy_main_server_dev.pem -o StrictHostKeyChecking=no ubuntu@ec2-18-136-124-105.ap-southeast-1.compute.amazonaws.com "sh deploy_recommendation_server_script"
