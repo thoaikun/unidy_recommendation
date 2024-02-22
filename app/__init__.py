@@ -1,8 +1,5 @@
 from flask import Flask
-from flask_mysqldb import MySQL
-import csv
-import json
-import time
+import pymysql
 from pathlib import Path
 
 app = Flask(__name__)
@@ -14,7 +11,15 @@ app.config['MYSQL_USER'] = 'admin'
 app.config['MYSQL_PASSWORD'] = 'unidyteam'
 app.config['MYSQL_DB'] = 'unidy_database'
 
-mysql = MySQL(app)
+mysql = pymysql.connect(
+    host=app.config['MYSQL_HOST'],
+    user=app.config['MYSQL_USER'],
+    port=app.config['MYSQL_PORT'],
+    password=app.config['MYSQL_PASSWORD'],
+    database=app.config['MYSQL_DB'],
+    charset='utf8mb4',
+    cursorclass=pymysql.cursors.DictCursor
+)
 
 from app.routes import recommend_routes
 app.register_blueprint(recommend_routes)

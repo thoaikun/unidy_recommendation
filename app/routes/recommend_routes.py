@@ -66,50 +66,50 @@ def sync_campaign():
 
 
 def get_campaign_from_db():
-    campaign_cursor = mysql.connection.cursor()
-    campaign_type_cursor = mysql.connection.cursor()
-    campaign_cursor.execute('SELECT campaign_id, content, numbers_volunteer, start_day, end_day, location, status, create_day, update_day, update_by FROM campaign')
+    with mysql:
+        with mysql.cursor() as campaign_cursor:
+            campaign_cursor.execute('SELECT campaign_id, content, numbers_volunteer, start_day, end_day, location, status, create_day, update_day, update_by FROM campaign')
+            mysql.commit()
 
-    campaigns_data = [
-        ['campaign_id', 'content', 'numbers_volunteer', 'start_day', 'end_day', 'location', 'status', 'create_day', 'update_day','update_by']
-    ]
-    campaigns_type_data = [
-        ['type_id', 'campaign_id', 'community_type', 'education_type', 'research_type', 'research_writing_editing', 'help_other', 'environment', 'healthy', 'emergency_preparedness']
-    ]
+            campaigns_data = [
+                ['campaign_id', 'content', 'numbers_volunteer', 'start_day', 'end_day', 'location', 'status', 'create_day', 'update_day','update_by']
+            ]
+            campaigns_type_data = [
+                ['type_id', 'campaign_id', 'community_type', 'education_type', 'research_writing_editing', 'help_other', 'environment', 'healthy', 'emergency_preparedness']
+            ]
 
-    for row in campaign_cursor.fetchall():
-        campaign_type_cursor.execute(f'SELECT * FROM campaign_type WHERE campaign_id = {row[0]}')
-        campaign_type = campaign_type_cursor.fetchone()
-        if campaign_type is not None:
-            campaigns_data.append([
-                row[0],
-                row[1],
-                row[2],
-                row[3].strftime('%Y-%m-%d') if row[3] is not None else None,
-                row[4].strftime('%Y-%m-%d') if row[4] is not None else None,
-                row[5],
-                row[6],
-                row[7].strftime('%Y-%m-%d') if row[7] is not None else None,
-                row[8].strftime('%Y-%m-%d') if row[8] is not None else None,
-                row[9]
-            ])
+            for row in campaign_cursor.fetchall():
+                with mysql.cursor() as campaign_type_cursor:
+                    campaign_type_cursor.execute('SELECT * FROM campaign_type WHERE campaign_id = %s', (row['campaign_id'],))
+                    mysql.commit()
+                    campaign_type = campaign_type_cursor.fetchone()
+                    if campaign_type is not None:
+                        campaigns_data.append([
+                            row['campaign_id'],
+                            row['content'],
+                            row['numbers_volunteer'],
+                            row['start_day'].strftime('%Y-%m-%d') if row['start_day'] is not None else None,
+                            row['end_day'].strftime('%Y-%m-%d') if row['end_day'] is not None else None,
+                            row['location'],
+                            row['status'],
+                            row['create_day'].strftime('%Y-%m-%d') if row['create_day'] is not None else None,
+                            row['update_day'].strftime('%Y-%m-%d') if row['update_day'] is not None else None,
+                            row['update_by']
+                        ])
 
-            campaigns_type_data.append([
-                campaign_type[0],
-                campaign_type[1],
-                campaign_type[2],
-                campaign_type[3],
-                campaign_type[4],
-                campaign_type[5],
-                campaign_type[6],
-                campaign_type[7],
-                campaign_type[8]
-            ])
+                        campaigns_type_data.append([
+                            campaign_type['type_id'],
+                            campaign_type['campaign_id'],
+                            campaign_type['community_type'],
+                            campaign_type['education_type'],
+                            campaign_type['research_writing_editing'],
+                            campaign_type['help_other'],
+                            campaign_type['environment'],
+                            campaign_type['healthy'],
+                            campaign_type['emergency_preparedness']
+                        ])
 
-            print('Sleeping for 0.5 seconds...')
-            time.sleep(0.5)
-
-    campaign_cursor.close()
-    campaign_type_cursor.close()
-    
+                        print('Sleeping for 0.5 seconds...')
+                        time.sleep(0.5)
+        
     return campaigns_data, campaigns_type_data
