@@ -24,8 +24,6 @@ def index():
     genome_tag = pd.read_csv(data_folder / 'campaign_type.csv')
     campaign = pd.read_csv(data_folder / 'campaign.csv')
     matrix_score = np.array(genome_tag)
-    
-    # print(matrix_score)
 
     # model_folder = current_directory.parent / 'model'
     model = joblib.load(data_folder/'model/knnModel.joblib')
@@ -62,8 +60,8 @@ def sync_campaign():
         for row in campaigns_type_data:
             writer.writerow(row)
 
-    print('Sync campaign done!')
     training()
+    print('Sync campaign done!')
     return json.dumps({'message': 'Sync campaign done!'})
 
 
