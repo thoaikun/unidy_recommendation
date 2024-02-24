@@ -9,6 +9,7 @@ from pathlib import Path
 import csv
 import time
 from .. import mysql
+from .train import training 
 
 recommend_routes = Blueprint('user_routes', __name__)
 
@@ -62,6 +63,7 @@ def sync_campaign():
             writer.writerow(row)
 
     print('Sync campaign done!')
+    training()
     return json.dumps({'message': 'Sync campaign done!'})
 
 
