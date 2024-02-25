@@ -23,7 +23,7 @@ def training():
   """# Content-based recommendation"""
   matrix_score = genome_tag[["community_type","education_type","research_writing_editing","help_other","environment","healthy","emergency_preparedness"]]
   matrix_score = np.array(matrix_score)
-  knn = NearestNeighbors(metric='cosine', algorithm='brute', n_neighbors=100 if matrix_score.shape[0] > 100 else matrix_score.shape[0], n_jobs=-1)
+  knn = NearestNeighbors(metric='cosine', algorithm='brute', n_neighbors=20 ,n_jobs=-1)
   knn.fit(matrix_score)
 
   #delete old model

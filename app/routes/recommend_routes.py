@@ -33,7 +33,11 @@ def index():
     distances, indices = model.kneighbors(vector)
     index_activity = [int(item) for sublist in indices for item in sublist]
     listIds = genome_tag.iloc[index_activity]['campaign_id']
-    campaign_ids_list = campaign[campaign['campaign_id'].isin(listIds)]['campaign_id'].tolist() 
+    # campaign_ids_list = campaign[campaign['campaign_id'].isin(listIds)]['campaign_id'].tolist() 
+
+    selected_campaigns = pd.DataFrame({'campaign_id': listIds})
+    result_df = pd.merge(selected_campaigns, campaign[['campaign_id']], on='campaign_id', how='left')
+    campaign_ids_list = result_df['campaign_id'].tolist()
 
     return json.dumps(campaign_ids_list)
 
