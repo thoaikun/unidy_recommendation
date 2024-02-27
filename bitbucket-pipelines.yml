@@ -3,6 +3,7 @@ image: atlassian/default-image:3
 pipelines:
   default:
     - step:
+        deployment: Develop
         script:
           - echo "Deploy recommendation service..."
   branches:
@@ -10,4 +11,4 @@ pipelines:
       - step:
           name: Running build script
           script:
-            - ssh -i ./unidy_main_server_dev.pem -o StrictHostKeyChecking=no ubuntu@ec2-18-136-124-105.ap-southeast-1.compute.amazonaws.com "sh deploy_recommendation_server_script"
+            - ssh -i ./unidy_main_server_dev.pem -o StrictHostKeyChecking=no ubuntu@ec2-52-221-205-29.ap-southeast-1.compute.amazonaws.com "sh deploy_recommendation_server"
