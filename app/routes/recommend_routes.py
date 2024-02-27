@@ -4,12 +4,13 @@ import joblib
 import os
 import pandas as pd
 import numpy as np
+import pymysql
 from sklearn.neighbors import NearestNeighbors
 from pathlib import Path
 import csv
 import time
-from .. import mysql
 from .train import training 
+from .. import app
 
 recommend_routes = Blueprint('user_routes', __name__)
 
@@ -70,7 +71,15 @@ def sync_campaign():
 
 
 def get_campaign_from_db():
-    with mysql:
+    with pymysql.connect(
+        host=app.config['MYSQL_HOST'],
+        user=app.config['MYSQL_USER'],
+        port=app.config['MYSQL_PORT'],
+        password=app.config['MYSQL_PASSWORD'],
+        database=app.config['MYSQL_DB'],
+        charset='utf8mb4',
+        cursorclass=pymysql.cursors.DictCursor
+    ) as mysql:
         with mysql.cursor() as campaign_cursor:
             campaign_cursor.execute('SELECT campaign_id, content, numbers_volunteer, start_day, end_day, location, status, create_day, update_day, update_by FROM campaign')
             mysql.commit()

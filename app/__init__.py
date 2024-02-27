@@ -21,9 +21,6 @@ mysql = pymysql.connect(
     cursorclass=pymysql.cursors.DictCursor
 )
 
-if not mysql.open:
-    mysql.ping(reconnect=True)
-
 from app.routes import recommend_routes
 app.register_blueprint(recommend_routes)
 
